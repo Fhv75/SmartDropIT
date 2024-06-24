@@ -25,10 +25,7 @@ function App() {
       .then((response) => {
         setIsHumidityEnabled(response.data.humedad !== -1);
         setSliderValue(response.data.humedad);
-        setIsTimeEnabled(response.data.horaInicio !== -1);
         setStartTime(response.data.horaInicio);
-        setEndTime(response.data.horaFin);
-        setIsTempEnabled(response.data.temperatura !== -1);
       })
       .catch((error) => {
         console.error('Error fetching data: ', error);
@@ -53,8 +50,6 @@ function App() {
   const [startTime, setStartTime] = useState("00:00");
   const [endTime, setEndTime] = useState("00:00");
 
-  const [isTempEnabled, setIsTempEnabled] = useState(false);
-  const [isTimeEnabled, setIsTimeEnabled] = useState(false);
   const [isHumidityEnabled, setIsHumidityEnabled] = useState(false);
 
   const [sliderValue, setSliderValue] = useState(60);
@@ -64,9 +59,7 @@ function App() {
 
     let data = {
       humedad: isHumidityEnabled ? sliderValue : -1,
-      startTime: isTimeEnabled ? startTime : -1,
-      endTime: isTimeEnabled ? endTime : -1,
-      temperatura: isTempEnabled ? temperatura : -1
+      startTime: isHumidityEnabled ? startTime : -1,
     };
 
     console.log(data);
@@ -109,39 +102,13 @@ function App() {
             </Box>
 
             <Flex align="center" mt={4}>
-              <Heading size="lg" color="cyan.500">Hora de Inicio:</Heading>
-              <Checkbox
-                colorScheme="cyan"
-                isChecked={isTimeEnabled} ml={2} onChange={(e) => setIsTimeEnabled(e.target.checked)}></Checkbox>
+              <Heading size="lg" color="cyan.500">Duración:</Heading>
             </Flex>
             <Input 
-              type="time" isDisabled={!isTimeEnabled} 
+              type="time" isDisabled={!isHumidityEnabled} 
               onChange={(e) => setStartTime(e.target.value)}
+              step="1"
             />
-
-            <Flex align="center" mt={4}>
-              <Heading size="lg" color="cyan.500">Hora de Fin:</Heading>
-              <Checkbox colorScheme="cyan" isChecked={isTimeEnabled} ml={2} onChange={(e) => setIsTimeEnabled(e.target.checked)}></Checkbox>
-            </Flex>
-            <Input 
-              type="time" isDisabled={!isTimeEnabled} 
-              onChange={(e) => setEndTime(e.target.value)}
-            />
-
-            <Flex align="center">
-              <Heading size="lg" color="cyan.500">Temperatura:</Heading>
-              <Checkbox colorScheme="cyan" isChecked={isTempEnabled} ml={2} onChange={(e) => setIsTempEnabled(e.target.checked)}></Checkbox>
-            </Flex>
-            <NumberInput
-              defaultValue={24} min={0}
-              isDisabled={!isTempEnabled} mt={4}
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
 
             <Button mt={8} colorScheme="green" onClick={handleSetProgramacionRiego}>Guardar</Button>
 
@@ -178,7 +145,7 @@ function App() {
               <Heading size="xl" color="cyan.500" mr={6}>Humedad:</Heading>
               <Heading size="xl" color="cyan.500">{humedad}%</Heading>
             </Center>
-            <Center mt={20}>
+            <Center mt={10}>
               <Heading size="xl" color="cyan.500" mr={6}>Temperatura:</Heading>
               <Heading size="xl" color="cyan.500">{temperatura} °C</Heading>
             </Center>
